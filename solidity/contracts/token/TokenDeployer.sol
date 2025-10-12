@@ -18,7 +18,7 @@ contract TokenDeployer {
     /// @dev This is the same deployer EOA as the one used to deploy all tBTC v1,
     ///      tBTC v2, and Mezo contracts across various networks.
     address public constant DEPLOYER =
-        0x123694886DBf5Ac94DDA07135349534536D14cAf;
+        0xe4F4c768d628074C8a975126D517a60A03848f69;
 
     /// @notice The governance address receiving the control over the token;
     /// @dev This is the same multisig as the one used to control Mezo contracts
