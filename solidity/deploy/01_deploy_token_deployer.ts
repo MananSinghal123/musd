@@ -32,13 +32,14 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
         from: deployer,
         salt: ethers.keccak256(
           ethers.toUtf8Bytes(
-            "Bank on yourself. Bring everyday finance to your Bitcoin.",
+            "Bank on yourself. Bring everyday finance to your Bitcoin. V2",
           ),
         ),
         confirmations: waitConfirmationsNumber(network.name),
       },
     )
-    await helpers.etherscan.verify(deployTx.deployment)
+    // Skip verification for now to avoid getting stuck
+    // await helpers.etherscan.verify(deployTx.deployment)
   }
 }
 

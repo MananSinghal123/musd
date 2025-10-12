@@ -60,6 +60,40 @@ export async function deployWithSingletonFactory<T extends BaseContract>(
   )
 
   if (contractAddress === ethers.ZeroAddress) {
+    // Check if the contract already exists at the expected CREATE2 address
+    const expectedAddress = ethers.getCreate2Address(
+      await singletonFactory.getAddress(),
+      opts.salt,
+      ethers.keccak256(initCode),
+    )
+
+    const existingCode = await opts.from.provider!.getCode(expectedAddress)
+    if (
+      typeof existingCode !== "undefined" &&
+      existingCode !== null &&
+      existingCode !== "0x" &&
+      existingCode !== "0x0"
+    ) {
+      // Contract already exists, return the existing deployment
+      const contractInstance: T = contractFactory.attach(expectedAddress) as T
+
+      deployments.log(
+        `${deploymentName} already deployed at ${expectedAddress}`,
+      )
+
+      const deployment: Deployment = await saveDeploymentArtifact(
+        deploymentName,
+        expectedAddress,
+        "0x0000000000000000000000000000000000000000000000000000000000000000", // No tx hash for existing deployment
+        {
+          contractName,
+          constructorArgs: opts?.constructorArgs,
+        },
+      )
+
+      return { contractInstance, deployment }
+    }
+
     throw new Error("Deployment simulation failed")
   }
 

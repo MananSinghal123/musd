@@ -46,7 +46,29 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
       stabilityPool.address,
       borrowerOperations.address,
       interestRateManager.address,
-      rcoManager.address
+      rcoManager.address,
+    )
+    return
+  }
+
+  // Check if MUSD is already deployed via TokenDeployer
+  const tokenDeployerContract = (await helpers.contracts.getContract(
+    "TokenDeployer",
+  )) as unknown as TokenDeployer
+
+  const existingTokenAddress = await tokenDeployerContract.token()
+  if (existingTokenAddress !== "0x0000000000000000000000000000000000000000") {
+    log(`MUSD already deployed at ${existingTokenAddress}`)
+
+    // Save the deployment artifact for the existing token
+    await saveDeploymentArtifact(
+      "MUSD",
+      existingTokenAddress,
+      "0x0", // No deployment transaction since it already exists
+      {
+        contractName: "contracts/token/MUSD.sol:MUSD",
+        log: true,
+      },
     )
     return
   }
@@ -62,9 +84,13 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   // function. It is the same deployer EOA as the one used to deploy all
   // tBTC v1, tBTC v2, and Mezo contracts across various networks.
   const eligibleDeployer = "0x123694886DBf5Ac94DDA07135349534536D14cAf"
-  
-  // Skip deployer check for testnet deployment
-  if (network.name !== "matsnet" && deployer.address !== eligibleDeployer) {
+
+  // Skip deployer check for testnet deployment (matsnet chain ID 31611)
+  if (
+    network.name !== "matsnet" &&
+    network.name !== "matsnet_fuzz" &&
+    deployer.address !== eligibleDeployer
+  ) {
     log(
       `The deployer is NOT the eligible deployer! The deployer address is ${deployer.address} and should be ${eligibleDeployer}`,
     )
@@ -102,7 +128,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     },
   )
 
-  await helpers.etherscan.verify(tokenDeployment)
+  // Skip verification for now to avoid getting stuck
+  // await helpers.etherscan.verify(tokenDeployment)
 }
 
 export default func
