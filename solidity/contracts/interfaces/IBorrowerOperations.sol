@@ -53,6 +53,7 @@ interface IBorrowerOperations {
     );
     event BorrowingFeePaid(address indexed _borrower, uint256 _fee);
     event RefinancingFeePaid(address indexed _borrower, uint256 _fee);
+    // event ReversibleCallOptionManagerAddressChanged(address _newAddress);
 
     // --- Functions ---
 

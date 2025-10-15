@@ -56,8 +56,8 @@ contract ReversibleCallOptionManager is
 
     enum OptionPhase {
         None, // No active option
-        Initialization, // Support being gathered
-        PreMaturity, // Active, can be terminated early
+        Initialization, // Option Initialized
+        PreMaturity, // Option Supported
         Maturity, // Ready for exercise or default
         Exercised, // Supporter took over position
         Terminated, // Borrower terminated early
@@ -72,7 +72,7 @@ contract ReversibleCallOptionManager is
         uint256 collateralAtStart; // C_t0: Initial collateral value
         uint256 debtAtStart; // D_t0: Initial debt
         uint256 lambda; // λ: Premium factor
-        uint256 premiumPaid; // φ = λ × C_t0: Actual premium paid
+        uint256 premium; // φ = λ × C_t0: Actual premium paid
         uint256 strikeCR; // K: Strike collateral ratio (ICR threshold)
         uint256 startTime; // t0: Option creation time
         uint256 maturityTime; // T: Expiry timestamp
@@ -104,8 +104,15 @@ contract ReversibleCallOptionManager is
 
     event OptionInitialized(
         address indexed borrower,
-        address indexed supporter,
         uint256 lambda,
+        uint256 premium,
+        uint256 strikeCR,
+        uint256 maturityTime
+    );
+
+    event OptionSupported(
+        address indexed borrower,
+        address indexed supporter,
         uint256 premiumPaid,
         uint256 strikeCR,
         uint256 maturityTime
@@ -119,11 +126,7 @@ contract ReversibleCallOptionManager is
         uint256 profit
     );
 
-    event OptionTerminated(
-        address indexed borrower,
-        uint256 terminationFee,
-        uint256 supporterRefund
-    );
+    event OptionTerminated(address indexed borrower, uint256 terminationFee);
 
     event OptionDefaulted(
         address indexed borrower,
@@ -133,11 +136,7 @@ contract ReversibleCallOptionManager is
 
     event ParametersUpdated(uint256 k_re, uint256 safetyMargin);
 
-    event LambdaCalculated(
-        address indexed borrower,
-        // uint256 lambdaStar,
-        uint256 actualLambda
-    );
+    event LambdaCalculated(address indexed borrower, uint256 actualLambda);
 
     // ============ Modifiers ============
 
@@ -212,7 +211,7 @@ contract ReversibleCallOptionManager is
     function initializeOption(
         address _borrower,
         uint256 _maturityDuration
-    ) external payable nonReentrant {
+    ) external onlyBorrower(_borrower) {
         require(_borrower != address(0), "RCO: Invalid borrower");
         require(
             _maturityDuration >= MIN_MATURITY &&
@@ -224,7 +223,7 @@ contract ReversibleCallOptionManager is
                 options[_borrower].phase == OptionPhase.Exercised ||
                 options[_borrower].phase == OptionPhase.Terminated ||
                 options[_borrower].phase == OptionPhase.Defaulted,
-            "RCO: Active option does not exist"
+            "RCO: Active option already exist"
         );
 
         // Get current trove state
@@ -240,15 +239,14 @@ contract ReversibleCallOptionManager is
         (uint256 coll, uint256 principal, uint256 interest, , , ) = troveManager
             .getEntireDebtAndColl(_borrower);
 
-        uint256 collateralValue = (coll * price) / DECIMAL_PRECISION;
+        // uint256 collateralValue = (coll * price) / DECIMAL_PRECISION;
 
         // Calculate lambda using risk-adjusted formula
-        uint256 lambda = _calculateLambda(collateralValue);
+        uint256 lambda = _calculateLambda(coll);
 
         // Calculate required premium: φ = λ × C_t0
-        uint256 requiredPremium = (lambda * collateralValue) /
-            DECIMAL_PRECISION;
-        require(msg.value >= requiredPremium, "RCO: Insufficient premium");
+        uint256 requiredPremium = (lambda * coll) / DECIMAL_PRECISION;
+        // require(msg.value >= requiredPremium, "RCO: Insufficient premium");
 
         // Calculate maturity time once
         uint256 maturityTime = block.timestamp + _maturityDuration;
@@ -256,32 +254,61 @@ contract ReversibleCallOptionManager is
         // Create option
         options[_borrower] = BackstopOption({
             borrower: _borrower,
-            supporter: msg.sender,
-            collateralAtStart: collateralValue,
+            supporter: address(0),
+            collateralAtStart: coll,
             debtAtStart: principal + interest,
             lambda: lambda,
-            premiumPaid: msg.value,
+            premium: requiredPremium,
             strikeCR: strikeThreshold,
             startTime: block.timestamp,
             maturityTime: maturityTime,
             interestRate: uint256(troveManager.getTroveInterestRate(_borrower)),
-            phase: OptionPhase.PreMaturity,
+            phase: OptionPhase.Initialization,
             exists: true
         });
 
-        supporterBalances[msg.sender] += msg.value;
-        totalPremiumsCollected[msg.sender] += msg.value;
-
         emit OptionInitialized(
             _borrower,
-            msg.sender,
             lambda,
-            msg.value,
+            requiredPremium,
+            // msg.value,
             strikeThreshold,
             maturityTime
         );
 
         emit LambdaCalculated(_borrower, lambda);
+    }
+
+    //Add a new payable support function
+    function support(
+        address _borrower
+    ) external payable nonReentrant optionExists(_borrower) {
+        BackstopOption storage option = options[_borrower];
+        require(
+            option.phase == OptionPhase.Initialization,
+            "RCO: Invalid phase"
+        );
+
+        uint256 requiredPremium = option.premium;
+        require(msg.value >= requiredPremium, "RCO: Insufficient premium");
+
+        option.supporter = msg.sender;
+        option.phase = OptionPhase.PreMaturity;
+        // option.premiumPaid = msg.value;
+
+        supporterBalances[msg.sender] += msg.value;
+        totalPremiumsCollected[msg.sender] += msg.value;
+
+        // Add premium as collateral to borrower's trove
+        troveManager.increaseTroveColl(_borrower, msg.value);
+
+        emit OptionSupported(
+            _borrower,
+            msg.sender,
+            msg.value,
+            option.strikeCR,
+            option.maturityTime
+        );
     }
 
     /**
@@ -312,23 +339,21 @@ contract ReversibleCallOptionManager is
             interestFactor *
             k_re) / (DECIMAL_PRECISION * DECIMAL_PRECISION * DECIMAL_PRECISION);
 
+        // Refund to supporter: premium + termination fee
+        // uint256 supporterRefund = option.premium + terminationFee;
         require(
             msg.value >= terminationFee,
             "RCO: Insufficient termination fee"
         );
-
-        // Refund to supporter: premium + termination fee
-        uint256 supporterRefund = option.premiumPaid + msg.value;
-
-        supporterBalances[option.supporter] -= option.premiumPaid;
-        option.phase = OptionPhase.Terminated;
+        supporterBalances[option.supporter] -= option.premium;
         earlyTerminations[option.supporter]++;
+        option.phase = OptionPhase.Terminated;
 
         // Transfer refund to supporter
-        (bool sent, ) = option.supporter.call{value: supporterRefund}("");
+        (bool sent, ) = option.supporter.call{value: terminationFee}("");
         require(sent, "RCO: Refund transfer failed");
 
-        emit OptionTerminated(_borrower, terminationFee, supporterRefund);
+        emit OptionTerminated(_borrower, terminationFee);
     }
 
     /**
@@ -402,12 +427,11 @@ contract ReversibleCallOptionManager is
         uint256 payoffBeforePremium = collateralValue - strikePrice;
 
         // Total profit/loss including premium paid at t0
-        int256 netPayoff = int256(payoffBeforePremium) -
-            int256(option.premiumPaid);
+        int256 netPayoff = int256(payoffBeforePremium) - int256(option.premium);
 
         // Update option state
         option.phase = OptionPhase.Exercised;
-        supporterBalances[option.supporter] -= option.premiumPaid;
+        supporterBalances[option.supporter] -= option.premium;
         successfulExercises[option.supporter]++;
 
         // Execute the option (following BorrowerOperations._closeTrove pattern):
@@ -453,20 +477,17 @@ contract ReversibleCallOptionManager is
         BackstopOption storage option = options[_borrower];
         require(block.timestamp >= option.maturityTime, "RCO: Not matured");
         require(option.phase == OptionPhase.PreMaturity, "RCO: Invalid phase");
-        require(
-            msg.sender == option.supporter || msg.sender == _borrower,
-            "RCO: Only supporter or borrower"
-        );
+        require(msg.sender == option.supporter, "RCO: Only supporter");
 
         // Supporter loses premium, trove proceeds to liquidation
         option.phase = OptionPhase.Defaulted;
-        supporterBalances[option.supporter] -= option.premiumPaid;
+        supporterBalances[option.supporter] -= option.premium;
 
         // Premium goes to protocol/borrower as compensation
-        (bool sent, ) = _borrower.call{value: option.premiumPaid}("");
+        (bool sent, ) = _borrower.call{value: option.premium}("");
         require(sent, "RCO: Premium transfer failed");
 
-        emit OptionDefaulted(_borrower, option.supporter, option.premiumPaid);
+        emit OptionDefaulted(_borrower, option.supporter, option.premium);
     }
 
     // ============ Lambda Calculation ============
@@ -475,11 +496,11 @@ contract ReversibleCallOptionManager is
      * @notice Calculate lambda using Risk-Adjusted Collateral Formula
      * λ = (Expected Loss + Safety Margin) / C_t0
      *
-     * @param _collateralValue Current collateral value in USD
+     * @param _collateral Current collateral value in USD
      * @return lambda Risk-adjusted premium factor (scaled by DECIMAL_PRECISION)
      */
     function _calculateLambda(
-        uint256 _collateralValue
+        uint256 _collateral
     ) internal pure returns (uint256) {
         // Risk-Adjusted Collateral Formula
         // Assumes 85% liquidation threshold with 90% recovery
@@ -487,7 +508,7 @@ contract ReversibleCallOptionManager is
         uint256 recoveryFraction = 90e16; // 90%
 
         // Expected value at liquidation
-        uint256 liquidationValue = (liquidationThreshold * _collateralValue) /
+        uint256 liquidationValue = (liquidationThreshold * _collateral) /
             DECIMAL_PRECISION;
 
         // Expected recovery from liquidation
@@ -495,20 +516,19 @@ contract ReversibleCallOptionManager is
             DECIMAL_PRECISION;
 
         // Expected loss = Initial Value - Recovery Value
-        uint256 expectedLoss = _collateralValue > recoveryValue
-            ? _collateralValue - recoveryValue
+        uint256 expectedLoss = _collateral > recoveryValue
+            ? _collateral - recoveryValue
             : 0;
 
         // Add safety margin to account for market volatility
         // Using fixed 10% safety margin
-        uint256 safetyMarginAmount = (10e16 * _collateralValue) /
-            DECIMAL_PRECISION;
+        uint256 safetyMarginAmount = (10e16 * _collateral) / DECIMAL_PRECISION;
 
         // Total risk = Expected Loss + Safety Margin
         uint256 totalRisk = expectedLoss + safetyMarginAmount;
 
         // λ = Total Risk / Initial Collateral Value
-        uint256 lambda = (totalRisk * DECIMAL_PRECISION) / _collateralValue;
+        uint256 lambda = (totalRisk * DECIMAL_PRECISION) / _collateral;
 
         // Clamp to valid range [MIN_LAMBDA, MAX_LAMBDA]
         if (lambda < MIN_LAMBDA) lambda = MIN_LAMBDA;
@@ -642,6 +662,19 @@ contract ReversibleCallOptionManager is
             successfulExercises[_supporter],
             earlyTerminations[_supporter]
         );
+    }
+
+    //New Function added to Update the Phase
+    function updatePhaseToMaturity(
+        address _borrower
+    ) external optionExists(_borrower) {
+        BackstopOption storage option = options[_borrower];
+        if (
+            option.phase == OptionPhase.PreMaturity &&
+            block.timestamp >= option.maturityTime
+        ) {
+            option.phase = OptionPhase.Maturity;
+        }
     }
 
     // ============ Admin Functions ============

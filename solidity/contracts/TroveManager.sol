@@ -499,7 +499,7 @@ contract TroveManager is
         address _borrower,
         uint256 _collIncrease
     ) external override returns (uint) {
-        _requireCallerIsBorrowerOperations();
+        _requireCallerIsBorrowerOperationsOrReversibleCallOptionManager();
         uint256 newColl = Troves[_borrower].coll + _collIncrease;
         Troves[_borrower].coll = newColl;
         return newColl;
@@ -1557,7 +1557,10 @@ contract TroveManager is
         );
     }
 
-    function _requireCallerIsBorrowerOperationsOrReversibleCallOptionManager() internal view {
+    function _requireCallerIsBorrowerOperationsOrReversibleCallOptionManager()
+        internal
+        view
+    {
         require(
             msg.sender == address(borrowerOperations) ||
                 msg.sender == reversibleCallOptionManagerAddress,

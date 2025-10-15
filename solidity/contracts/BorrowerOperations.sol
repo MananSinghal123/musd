@@ -16,6 +16,7 @@ import "./interfaces/IPCV.sol";
 import "./interfaces/ISortedTroves.sol";
 import "./interfaces/ITroveManager.sol";
 import "./token/IMUSD.sol";
+// import "./interfaces/IReversibleCallOptionManager.sol";
 
 contract BorrowerOperations is
     CheckContract,
@@ -106,6 +107,7 @@ contract BorrowerOperations is
     ICollSurplusPool public collSurplusPool;
     IMUSD public musd;
     IPCV public pcv;
+    // IReversibleCallOptionManager public reversibleCallOptionManager;
 
     // A doubly linked list of Troves, sorted by their collateral ratios
     ISortedTroves public sortedTroves;
@@ -137,6 +139,16 @@ contract BorrowerOperations is
         );
         _;
     }
+
+    // function _underRCOProtection(address _borrower) internal view {
+
+    //         require(
+    //             !reversibleCallOptionManager.isOptionActive(_borrower),
+    //             "BorrowerOps: Trove is under RCO protection"
+    //         );
+
+    //     _
+    // }
 
     function initialize() external initializer {
         __Ownable_init(msg.sender);
@@ -227,6 +239,11 @@ contract BorrowerOperations is
         address _upperHint,
         address _lowerHint
     ) external override {
+        // require(
+        //     !reversibleCallOptionManager.isOptionActive(msg.sender),
+        //     "BorrowerOps: Trove is under RCO protection"
+        // );
+        // _underRCOProtection(msg.sender);
         _adjustTrove(
             msg.sender,
             msg.sender,
@@ -245,6 +262,10 @@ contract BorrowerOperations is
         address _upperHint,
         address _lowerHint
     ) external override {
+        // require(
+        //     !reversibleCallOptionManager.isOptionActive(msg.sender),
+        //     "BorrowerOps: Trove is under RCO protection"
+        // );
         _adjustTrove(
             msg.sender,
             msg.sender,
@@ -276,6 +297,10 @@ contract BorrowerOperations is
     }
 
     function closeTrove() external override {
+        // require(
+        //     !reversibleCallOptionManager.isOptionActive(msg.sender),
+        //     "BorrowerOps: Trove is under RCO protection"
+        // );
         _closeTrove(msg.sender, msg.sender, msg.sender);
     }
 
@@ -300,6 +325,14 @@ contract BorrowerOperations is
         address _upperHint,
         address _lowerHint
     ) external payable override {
+        // if (_collWithdrawal > 0 || _isDebtIncrease) {
+        //     require(
+        //         address(reversibleCallOptionManager) == address(0) ||
+        //             !reversibleCallOptionManager.isOptionActive(msg.sender),
+        //         "BorrowerOps: Cannot withdraw/borrow under RCO protection"
+        //     );
+        // }
+
         _adjustTrove(
             msg.sender,
             msg.sender,
@@ -341,6 +374,10 @@ contract BorrowerOperations is
         sortedTroves = ISortedTroves(_addresses[10]);
         stabilityPoolAddress = _addresses[11];
         troveManager = ITroveManager(_addresses[12]);
+        // reversibleCallOptionManager = IReversibleCallOptionManager(
+        //     _addresses[13]
+        // );
+
         // slither-disable-end missing-zero-check
 
         emit ActivePoolAddressChanged(_addresses[0]);
@@ -356,6 +393,7 @@ contract BorrowerOperations is
         emit SortedTrovesAddressChanged(_addresses[10]);
         emit StabilityPoolAddressChanged(_addresses[11]);
         emit TroveManagerAddressChanged(_addresses[12]);
+        // emit ReversibleCallOptionManagerAddressChanged(_addresses[13]);
 
         renounceOwnership();
     }

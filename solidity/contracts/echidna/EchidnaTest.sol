@@ -38,6 +38,7 @@ import "../HintHelpers.sol";
 import "../interfaces/IHintHelpers.sol";
 import "./EchidnaProxy.sol";
 import "../tests/MUSDTester.sol";
+import "../interfaces/IReversibleCallOptionManager.sol";
 
 // Run with
 // `rm -rf echidna-corpus && echidna . --config echidna.yaml --contract EchidnaTest`
@@ -60,6 +61,7 @@ contract EchidnaTest {
     IGovernableVariables private immutable governableVariables;
     IPriceFeed private immutable priceFeed;
     IHintHelpers private immutable hintHelpers;
+    IReversibleCallOptionManager private immutable reversibleCallOptionManager;
 
     uint public constant NUMBER_OF_ACTORS = 10;
     uint public constant INITIAL_BALANCE = 1e24;
@@ -261,6 +263,7 @@ contract EchidnaTest {
                 address(sortedTroves),
                 address(stabilityPool),
                 address(troveManager)
+                // address(reversibleCallOptionManager) // reversibleCallOptionManagerAddress
             ]
         );
         collSurplusPool.setAddresses(
