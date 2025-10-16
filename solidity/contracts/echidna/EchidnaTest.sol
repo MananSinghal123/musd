@@ -262,8 +262,8 @@ contract EchidnaTest {
                 address(priceFeed),
                 address(sortedTroves),
                 address(stabilityPool),
-                address(troveManager)
-                // address(reversibleCallOptionManager) // reversibleCallOptionManagerAddress
+                address(troveManager),
+                address(reversibleCallOptionManager) // reversibleCallOptionManagerAddress
             ]
         );
         collSurplusPool.setAddresses(
@@ -544,10 +544,10 @@ contract EchidnaTest {
         );
     }
 
-    function refinanceExt(uint _i) external {
-        uint actor = _i % NUMBER_OF_ACTORS;
-        echidnaProxies[actor].refinancePrx();
-    }
+    // function refinanceExt(uint _i) external {
+    //     uint actor = _i % NUMBER_OF_ACTORS;
+    //     echidnaProxies[actor].refinancePrx();
+    // }
 
     function addCollExt(uint _i, uint _BTC) external payable {
         uint actor = _i % NUMBER_OF_ACTORS;
@@ -711,13 +711,13 @@ contract EchidnaTest {
         echidnaProxies[actor].withdrawCollateralGainToTrovePrx();
     }
 
-    function setRefinancingFeePercentageExt(
-        uint256 _refinanceFeePercentage
-    ) external {
-        borrowerOperations.setRefinancingFeePercentage(
-            uint8(_refinanceFeePercentage % 101)
-        );
-    }
+    // function setRefinancingFeePercentageExt(
+    //     uint256 _refinanceFeePercentage
+    // ) external {
+    //     borrowerOperations.setRefinancingFeePercentage(
+    //         uint8(_refinanceFeePercentage % 101)
+    //     );
+    // }
 
     function approveMinNetDebtExt() external {
         borrowerOperations.approveMinNetDebt();

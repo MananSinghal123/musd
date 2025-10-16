@@ -170,7 +170,7 @@ contract ReversibleCallOptionManager is
         __ReentrancyGuard_init();
 
         // Set default parameters
-        k_re = 8e17; // 0.8 (80%)
+        k_re = 1e17; // 0.8 (80%)
         safetyMargin = 1e17; // 10%
     }
 
@@ -328,19 +328,8 @@ contract ReversibleCallOptionManager is
         BackstopOption storage option = options[_borrower];
         require(block.timestamp < option.maturityTime, "RCO: Option matured");
 
-        // Calculate termination fee: C_re = λ × C_t0 × (1 + I_L) × k_re
-        uint256 timeElapsed = block.timestamp - option.startTime;
-        uint256 accruedInterest = (option.interestRate * timeElapsed) /
-            (365 days);
-        uint256 interestFactor = DECIMAL_PRECISION + accruedInterest;
+        uint256 terminationFee = getTerminationFee(_borrower);
 
-        uint256 terminationFee = (option.lambda *
-            option.collateralAtStart *
-            interestFactor *
-            k_re) / (DECIMAL_PRECISION * DECIMAL_PRECISION * DECIMAL_PRECISION);
-
-        // Refund to supporter: premium + termination fee
-        // uint256 supporterRefund = option.premium + terminationFee;
         require(
             msg.value >= terminationFee,
             "RCO: Insufficient termination fee"
@@ -628,7 +617,7 @@ contract ReversibleCallOptionManager is
 
     function getTerminationFee(
         address _borrower
-    ) external view returns (uint256) {
+    ) public view returns (uint256) {
         BackstopOption memory option = options[_borrower];
         if (!option.exists || option.phase != OptionPhase.PreMaturity) {
             return 0;
@@ -641,7 +630,8 @@ contract ReversibleCallOptionManager is
 
         return
             (option.lambda * option.collateralAtStart * interestFactor * k_re) /
-            (DECIMAL_PRECISION * DECIMAL_PRECISION * DECIMAL_PRECISION);
+            (DECIMAL_PRECISION * DECIMAL_PRECISION * DECIMAL_PRECISION) +
+            option.premium;
     }
 
     function getSupporterStats(

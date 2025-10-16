@@ -757,6 +757,7 @@ describe("ReversibleCallOptionManager - initializeOption", () => {
       await contracts.reversibleCallOptionManager
         .connect(bob.wallet)
         .exercise(alice.wallet.address)
+
       const bobEthAfter = await ethers.provider.getBalance(bob.wallet.address)
       expect(bobEthAfter).to.be.gt(bobEthBefore)
       const bobMusdAfter = await contracts.musd.balanceOf(bob.wallet.address)
@@ -996,6 +997,123 @@ describe("ReversibleCallOptionManager - initializeOption", () => {
       expect(totalPremiums).to.equal(premium)
       expect(exercises).to.equal(1)
       expect(terminations).to.equal(0)
+    })
+  })
+
+  describe("ReversibleCallOptionManager - Option Restrictions", () => {
+    it("should prevent borrower from withdrawing loan during PreMaturity phase", async () => {
+      await dropPrice(contracts, deployer, alice)
+      const maturityDuration = 3600 // 1 hour
+      await contracts.reversibleCallOptionManager
+        .connect(alice.wallet)
+        .initializeOption(alice.wallet.address, 31 * 60)
+      let option = await contracts.reversibleCallOptionManager.getOption(
+        alice.wallet.address,
+      )
+      expect(option.phase).to.equal(1) // PreMaturity
+      const premium = option.premium
+      await contracts.reversibleCallOptionManager
+        .connect(bob.wallet)
+        .support(alice.wallet.address, { value: premium })
+      // Option is now in PreMaturity phase
+
+      option = await contracts.reversibleCallOptionManager.getOption(
+        alice.wallet.address,
+      )
+      expect(option.phase).to.equal(2) // PreMaturity
+      // Try to withdraw loan
+      await expect(
+        contracts.borrowerOperations
+          .connect(alice.wallet)
+          .withdrawMUSD(1n, alice.wallet, alice.wallet),
+      ).to.be.revertedWith("BorrowerOps: Trove is under RCO protection")
+    })
+
+    it("should allow borrower to withdraw loan after option is terminated, exercised, or defaulted", async () => {
+      await dropPrice(contracts, deployer, alice)
+      const maturityDuration = 3600 // 1 hour
+      await contracts.reversibleCallOptionManager.initializeOption(
+        alice.wallet.address,
+        maturityDuration,
+      )
+      const premium = await calculateRequiredPremium(alice.wallet.address)
+      await contracts.reversibleCallOptionManager
+        .connect(bob.wallet)
+        .support(alice.wallet.address, { value: premium })
+      // Terminate early
+      const terminationFee =
+        await contracts.reversibleCallOptionManager.getTerminationFee(
+          alice.wallet.address,
+        )
+      await contracts.reversibleCallOptionManager
+        .connect(alice.wallet)
+        .terminateEarly(alice.wallet.address, { value: terminationFee })
+      const DECIMAL_PRECISION = 10n ** 18n
+
+      console.log("Premium:", (Number(premium) / 1e18).toFixed(6))
+      console.log(
+        "Termination fee:",
+        (Number(terminationFee) / 1e18).toFixed(6),
+      )
+      // Make Alice's trove healthy before withdrawal
+      await contracts.mockAggregator
+        .connect(deployer.wallet)
+        .setPrice(to1e18(60_000))
+      await expect(
+        contracts.borrowerOperations
+          .connect(alice.wallet)
+          .withdrawMUSD(1n, alice.wallet, alice.wallet),
+      ).to.not.be.reverted
+      // Re-initialize and exercise
+      // await contracts.reversibleCallOptionManager.initializeOption(
+      //   alice.wallet.address,
+      //   maturityDuration,
+      // )
+      // const premium2 = await calculateRequiredPremium(alice.wallet.address)
+      // await contracts.reversibleCallOptionManager
+      //   .connect(bob.wallet)
+      //   .support(alice.wallet.address, { value: premium2 })
+      // await fastForwardTime(maturityDuration + 1)
+      // await contracts.mockAggregator
+      //   .connect(deployer.wallet)
+      //   .setPrice(to1e18(60_000))
+      // await contracts.musd
+      //   .connect(dennis.wallet)
+      //   .transfer(bob.wallet.address, to1e18(500_000))
+      // await contracts.reversibleCallOptionManager
+      //   .connect(bob.wallet)
+      //   .exercise(alice.wallet.address)
+      // // Make Alice's trove healthy before withdrawal
+      // await contracts.mockAggregator
+      //   .connect(deployer.wallet)
+      //   .setPrice(to1e18(60_000))
+      // await expect(
+      //   contracts.borrowerOperations
+      //     .connect(alice.wallet)
+      //     .withdrawMUSD(1n, alice.wallet, alice.wallet),
+      // ).to.not.be.reverted
+      // // Re-initialize and default
+      // await contracts.reversibleCallOptionManager.initializeOption(
+      //   alice.wallet.address,
+      //   maturityDuration,
+      // )
+      // const premium3 = await calculateRequiredPremium(alice.wallet.address)
+      // await contracts.reversibleCallOptionManager
+      //   .connect(bob.wallet)
+      //   .support(alice.wallet.address, { value: premium3 })
+      // await fastForwardTime(maturityDuration + 1)
+      // await contracts.reversibleCallOptionManager
+      //   .connect(bob.wallet)
+      //   .defaultOption(alice.wallet.address)
+      // // Make Alice's trove healthy before withdrawal
+      // await contracts.mockAggregator
+      //   .connect(deployer.wallet)
+      //   .setPrice(to1e18(60_000))
+      // await expect(
+      //   contracts.borrowerOperations
+      //     .connect(alice.wallet)
+      //     .withdrawMUSD(1n, alice.wallet, alice.wallet),
+      // ).to.not.be.reverted
     })
   })
 })

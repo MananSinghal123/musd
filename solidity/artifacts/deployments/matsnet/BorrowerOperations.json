@@ -1,5 +1,5 @@
 {
-  "address": "0x8D59B6ADaa214342E4e480EB0d6Ca33a0F694Bb5",
+  "address": "0xCca991b8ef69eb13C43c3D366B01A532D2B12218",
   "abi": [
     {
       "inputs": [],
@@ -339,12 +339,12 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "uint8",
-          "name": "_refinanceFeePercentage",
-          "type": "uint8"
+          "internalType": "address",
+          "name": "_newAddress",
+          "type": "address"
         }
       ],
-      "name": "RefinancingFeePercentageChanged",
+      "name": "ReversibleCallOptionManagerAddressChanged",
       "type": "event"
     },
     {
@@ -1106,24 +1106,6 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_upperHint",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_lowerHint",
-          "type": "address"
-        }
-      ],
-      "name": "refinance",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [],
       "name": "refinancingFeePercentage",
       "outputs": [
@@ -1167,172 +1149,27 @@
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "reversibleCallOptionManager",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_recipient",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_caller",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_collWithdrawal",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_mUSDChange",
-          "type": "uint256"
-        },
-        {
-          "internalType": "bool",
-          "name": "_isDebtIncrease",
-          "type": "bool"
-        },
-        {
-          "internalType": "address",
-          "name": "_upperHint",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_lowerHint",
+          "internalType": "contract IReversibleCallOptionManager",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "restrictedAdjustTrove",
-      "outputs": [],
-      "stateMutability": "payable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_recipient",
-          "type": "address"
-        }
-      ],
-      "name": "restrictedClaimCollateral",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_caller",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_recipient",
-          "type": "address"
-        }
-      ],
-      "name": "restrictedCloseTrove",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_recipient",
-          "type": "address"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_debtAmount",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "_upperHint",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_lowerHint",
-          "type": "address"
-        }
-      ],
-      "name": "restrictedOpenTrove",
-      "outputs": [],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_upperHint",
-          "type": "address"
-        },
-        {
-          "internalType": "address",
-          "name": "_lowerHint",
-          "type": "address"
-        }
-      ],
-      "name": "restrictedRefinance",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address[13]",
+          "internalType": "address[14]",
           "name": "_addresses",
-          "type": "address[13]"
+          "type": "address[14]"
         }
       ],
       "name": "setAddresses",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint8",
-          "name": "_refinanceFeePercentage",
-          "type": "uint8"
-        }
-      ],
-      "name": "setRefinancingFeePercentage",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1436,8 +1273,8 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0x30effbc38b325bdb44ba1b6e5cf970f2aa3693e5324513f3445810ae1c76d00b",
+  "transactionHash": "0x8b17a79eb348e133f47a7cd4c3be79049e063f8f9966738be181e40dc7102f6c",
   "numDeployments": 1,
-  "implementation": "0x1850bd193bF9543df1860af7E2539eBdFB2C79be",
+  "implementation": "0x9be2BCd09c76A4FC1129adC2c6238ea5099E1731",
   "devdoc": "Contract deployed as upgradable proxy"
 }

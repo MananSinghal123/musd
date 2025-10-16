@@ -130,9 +130,9 @@ contract EchidnaProxy {
         // slither-disable-end arbitrary-send-eth
     }
 
-    function refinancePrx() external {
-        borrowerOperations.refinance(address(0), address(0));
-    }
+    // function refinancePrx() external {
+    //     borrowerOperations.refinance(address(0), address(0));
+    // }
 
     function claimCollateralPrx() external {
         borrowerOperations.claimCollateral();

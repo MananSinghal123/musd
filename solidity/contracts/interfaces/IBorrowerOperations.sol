@@ -36,7 +36,7 @@ interface IBorrowerOperations {
         uint256 proposedRedemptionRate,
         uint256 proposedRedemptionRateTime
     );
-    event RefinancingFeePercentageChanged(uint8 _refinanceFeePercentage);
+    // event RefinancingFeePercentageChanged(uint8 _refinanceFeePercentage);
     event SortedTrovesAddressChanged(address _sortedTrovesAddress);
     event StabilityPoolAddressChanged(address _stabilityPoolAddress);
     event TroveManagerAddressChanged(address _newTroveManagerAddress);
@@ -53,15 +53,15 @@ interface IBorrowerOperations {
     );
     event BorrowingFeePaid(address indexed _borrower, uint256 _fee);
     event RefinancingFeePaid(address indexed _borrower, uint256 _fee);
-    // event ReversibleCallOptionManagerAddressChanged(address _newAddress);
+    event ReversibleCallOptionManagerAddressChanged(address _newAddress);
 
     // --- Functions ---
 
-    function setAddresses(address[13] memory addresses) external;
+    function setAddresses(address[14] memory addresses) external;
 
-    function setRefinancingFeePercentage(
-        uint8 _refinanceFeePercentage
-    ) external;
+    // function setRefinancingFeePercentage(
+    //     uint8 _refinanceFeePercentage
+    // ) external;
 
     function openTrove(
         uint256 _debtAmount,
@@ -69,13 +69,13 @@ interface IBorrowerOperations {
         address _lowerHint
     ) external payable;
 
-    function restrictedOpenTrove(
-        address _borrower,
-        address _recipient,
-        uint256 _debtAmount,
-        address _upperHint,
-        address _lowerHint
-    ) external payable;
+    // function restrictedOpenTrove(
+    //     address _borrower,
+    //     address _recipient,
+    //     uint256 _debtAmount,
+    //     address _upperHint,
+    //     address _lowerHint
+    // ) external payable;
 
     function proposeMinNetDebt(uint256 _minNetDebt) external;
 
@@ -117,19 +117,19 @@ interface IBorrowerOperations {
 
     function closeTrove() external;
 
-    function restrictedCloseTrove(
-        address _borrower,
-        address _caller,
-        address _recipient
-    ) external;
+    // function restrictedCloseTrove(
+    //     address _borrower,
+    //     address _caller,
+    //     address _recipient
+    // ) external;
 
-    function refinance(address _upperHint, address _lowerHint) external;
+    // function refinance(address _upperHint, address _lowerHint) external;
 
-    function restrictedRefinance(
-        address _borrower,
-        address _upperHint,
-        address _lowerHint
-    ) external;
+    // function restrictedRefinance(
+    //     address _borrower,
+    //     address _upperHint,
+    //     address _lowerHint
+    // ) external;
 
     function adjustTrove(
         uint256 _collWithdrawal,
@@ -139,23 +139,23 @@ interface IBorrowerOperations {
         address _lowerHint
     ) external payable;
 
-    function restrictedAdjustTrove(
-        address _borrower,
-        address _recipient,
-        address _caller,
-        uint256 _collWithdrawal,
-        uint256 _mUSDChange,
-        bool _isDebtIncrease,
-        address _upperHint,
-        address _lowerHint
-    ) external payable;
+    // function restrictedAdjustTrove(
+    //     address _borrower,
+    //     address _recipient,
+    //     address _caller,
+    //     uint256 _collWithdrawal,
+    //     uint256 _mUSDChange,
+    //     bool _isDebtIncrease,
+    //     address _upperHint,
+    //     address _lowerHint
+    // ) external payable;
 
     function claimCollateral() external;
 
-    function restrictedClaimCollateral(
-        address _borrower,
-        address _recipient
-    ) external;
+    // function restrictedClaimCollateral(
+    //     address _borrower,
+    //     address _recipient
+    // ) external;
 
     function governableVariables() external view returns (IGovernableVariables);
 

@@ -288,16 +288,16 @@ contract BorrowerOperationsSignatures is
             addCollData.deadline
         );
 
-        borrowerOperations.restrictedAdjustTrove{value: msg.value}(
-            addCollData.borrower,
-            addCollData.borrower,
-            msg.sender,
-            0,
-            0,
-            false,
-            addCollData.upperHint,
-            addCollData.lowerHint
-        );
+        // borrowerOperations.restrictedAdjustTrove{value: msg.value}(
+        //     addCollData.borrower,
+        //     addCollData.borrower,
+        //     msg.sender,
+        //     0,
+        //     0,
+        //     false,
+        //     addCollData.upperHint,
+        //     addCollData.lowerHint
+        // );
     }
 
     function closeTroveWithSignature(
@@ -320,11 +320,11 @@ contract BorrowerOperationsSignatures is
             closeTroveData.deadline
         );
 
-        borrowerOperations.restrictedCloseTrove(
-            closeTroveData.borrower,
-            msg.sender,
-            closeTroveData.recipient
-        );
+        // borrowerOperations.restrictedCloseTrove(
+        //     closeTroveData.borrower,
+        //     msg.sender,
+        //     closeTroveData.recipient
+        // );
     }
 
     function adjustTroveWithSignature(
@@ -364,16 +364,16 @@ contract BorrowerOperationsSignatures is
             adjustTroveData.deadline
         );
 
-        borrowerOperations.restrictedAdjustTrove{value: msg.value}(
-            adjustTroveData.borrower,
-            adjustTroveData.recipient,
-            msg.sender,
-            adjustTroveData.collWithdrawal,
-            adjustTroveData.debtChange,
-            adjustTroveData.isDebtIncrease,
-            adjustTroveData.upperHint,
-            adjustTroveData.lowerHint
-        );
+        // borrowerOperations.restrictedAdjustTrove{value: msg.value}(
+        //     adjustTroveData.borrower,
+        //     adjustTroveData.recipient,
+        //     msg.sender,
+        //     adjustTroveData.collWithdrawal,
+        //     adjustTroveData.debtChange,
+        //     adjustTroveData.isDebtIncrease,
+        //     adjustTroveData.upperHint,
+        //     adjustTroveData.lowerHint
+        // );
     }
 
     function withdrawCollWithSignature(
@@ -406,16 +406,16 @@ contract BorrowerOperationsSignatures is
             withdrawCollData.deadline
         );
 
-        borrowerOperations.restrictedAdjustTrove(
-            withdrawCollData.borrower,
-            withdrawCollData.recipient,
-            msg.sender,
-            withdrawCollData.amount,
-            0,
-            false,
-            withdrawCollData.upperHint,
-            withdrawCollData.lowerHint
-        );
+        // borrowerOperations.restrictedAdjustTrove(
+        //     withdrawCollData.borrower,
+        //     withdrawCollData.recipient,
+        //     msg.sender,
+        //     withdrawCollData.amount,
+        //     0,
+        //     false,
+        //     withdrawCollData.upperHint,
+        //     withdrawCollData.lowerHint
+        // );
     }
 
     function openTroveWithSignature(
@@ -449,13 +449,13 @@ contract BorrowerOperationsSignatures is
             openTroveData.deadline
         );
 
-        borrowerOperations.restrictedOpenTrove{value: msg.value}(
-            openTroveData.borrower,
-            openTroveData.recipient,
-            openTroveData.debtAmount,
-            openTroveData.upperHint,
-            openTroveData.lowerHint
-        );
+        // borrowerOperations.restrictedOpenTrove{value: msg.value}(
+        //     openTroveData.borrower,
+        //     openTroveData.recipient,
+        //     openTroveData.debtAmount,
+        //     openTroveData.upperHint,
+        //     openTroveData.lowerHint
+        // );
     }
 
     function withdrawMUSDWithSignature(
@@ -488,16 +488,16 @@ contract BorrowerOperationsSignatures is
             withdrawMUSDData.deadline
         );
 
-        borrowerOperations.restrictedAdjustTrove(
-            withdrawMUSDData.borrower,
-            withdrawMUSDData.recipient,
-            msg.sender,
-            0,
-            withdrawMUSDData.amount,
-            true,
-            withdrawMUSDData.upperHint,
-            withdrawMUSDData.lowerHint
-        );
+        // borrowerOperations.restrictedAdjustTrove(
+        //     withdrawMUSDData.borrower,
+        //     withdrawMUSDData.recipient,
+        //     msg.sender,
+        //     0,
+        //     withdrawMUSDData.amount,
+        //     true,
+        //     withdrawMUSDData.upperHint,
+        //     withdrawMUSDData.lowerHint
+        // );
     }
 
     function repayMUSDWithSignature(
@@ -524,16 +524,16 @@ contract BorrowerOperationsSignatures is
             repayMUSDData.deadline
         );
 
-        borrowerOperations.restrictedAdjustTrove(
-            repayMUSDData.borrower,
-            repayMUSDData.borrower,
-            msg.sender,
-            0,
-            repayMUSDData.amount,
-            false,
-            repayMUSDData.upperHint,
-            repayMUSDData.lowerHint
-        );
+        // borrowerOperations.restrictedAdjustTrove(
+        //     repayMUSDData.borrower,
+        //     repayMUSDData.borrower,
+        //     msg.sender,
+        //     0,
+        //     repayMUSDData.amount,
+        //     false,
+        //     repayMUSDData.upperHint,
+        //     repayMUSDData.lowerHint
+        // );
     }
 
     function refinanceWithSignature(
@@ -561,11 +561,11 @@ contract BorrowerOperationsSignatures is
             _deadline
         );
 
-        borrowerOperations.restrictedRefinance(
-            refinanceData.borrower,
-            refinanceData.upperHint,
-            refinanceData.lowerHint
-        );
+        // borrowerOperations.restrictedRefinance(
+        //     refinanceData.borrower,
+        //     refinanceData.upperHint,
+        //     refinanceData.lowerHint
+        // );
     }
 
     function claimCollateralWithSignature(
@@ -591,10 +591,10 @@ contract BorrowerOperationsSignatures is
             claimCollateralData.deadline
         );
 
-        borrowerOperations.restrictedClaimCollateral(
-            claimCollateralData.borrower,
-            claimCollateralData.recipient
-        );
+        // borrowerOperations.restrictedClaimCollateral(
+        //     claimCollateralData.borrower,
+        //     claimCollateralData.recipient
+        // );
     }
 
     function getNonce(address user) public view returns (uint256) {
