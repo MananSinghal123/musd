@@ -19,6 +19,7 @@ import "./interfaces/IPCV.sol";
 import "./interfaces/ISortedTroves.sol";
 import "./interfaces/IStabilityPool.sol";
 import "./interfaces/ITroveManager.sol";
+import "./interfaces/IReversibleCallOptionManager.sol";
 import "./token/IMUSD.sol";
 
 contract TroveManager is
@@ -158,6 +159,7 @@ contract TroveManager is
     // A doubly linked list of Troves, sorted by their sorted by their collateral ratios
     ISortedTroves public sortedTroves;
     IStabilityPool public override stabilityPool;
+    IReversibleCallOptionManager public reversibleCallOptionManager;
 
     // --- Data structures ---
 
@@ -232,9 +234,7 @@ contract TroveManager is
         checkContract(_musdTokenAddress);
         checkContract(_pcvAddress);
         checkContract(_priceFeedAddress);
-        if (_reversibleCallOptionManagerAddress != address(0)) {
-            checkContract(_reversibleCallOptionManagerAddress);
-        }
+        checkContract(_reversibleCallOptionManagerAddress);
         checkContract(_sortedTrovesAddress);
         checkContract(_stabilityPoolAddress);
 
@@ -248,9 +248,12 @@ contract TroveManager is
         musdToken = IMUSD(_musdTokenAddress);
         pcv = IPCV(_pcvAddress);
         priceFeed = IPriceFeed(_priceFeedAddress);
-        reversibleCallOptionManagerAddress = _reversibleCallOptionManagerAddress;
+        reversibleCallOptionManager = IReversibleCallOptionManager(
+            _reversibleCallOptionManagerAddress
+        );
         sortedTroves = ISortedTroves(_sortedTrovesAddress);
         stabilityPool = IStabilityPool(_stabilityPoolAddress);
+
         // slither-disable-end missing-zero-check
 
         emit ActivePoolAddressChanged(_activePoolAddress);
@@ -264,6 +267,9 @@ contract TroveManager is
         emit PriceFeedAddressChanged(_priceFeedAddress);
         emit SortedTrovesAddressChanged(_sortedTrovesAddress);
         emit StabilityPoolAddressChanged(_stabilityPoolAddress);
+        emit ReversibleCallOptionManagerAddressChanged(
+            _reversibleCallOptionManagerAddress
+        );
 
         renounceOwnership();
     }
@@ -274,6 +280,10 @@ contract TroveManager is
         address[] memory borrowers = new address[](1);
         borrowers[0] = _borrower;
         batchLiquidateTroves(borrowers);
+
+        // if (address(reversibleCallOptionManager) != address(0)) {
+        //     reversibleCallOptionManager.notifyTroveLiquidated(_borrower);
+        // }
     }
 
     /* Send _amount mUSD to the system and redeem the corresponding amount of collateral from as many Troves as are needed to fill the redemption
@@ -1105,6 +1115,9 @@ contract TroveManager is
         );
 
         _closeTrove(_borrower, Status.closedByLiquidation);
+        if (address(reversibleCallOptionManager) != address(0)) {
+            reversibleCallOptionManager.notifyTroveLiquidated(_borrower);
+        }
         emit TroveLiquidated(
             _borrower,
             singleLiquidation.entireTrovePrincipal,
@@ -1563,7 +1576,7 @@ contract TroveManager is
     {
         require(
             msg.sender == address(borrowerOperations) ||
-                msg.sender == reversibleCallOptionManagerAddress,
+                msg.sender == address(reversibleCallOptionManager),
             "TroveManager: Caller is not the BorrowerOperations contract or ReversibleCallOptionManager"
         );
     }

@@ -1,5 +1,5 @@
 {
-  "address": "0xa83642d4719750B32a8A7930FCeAe02Bfcdab5E6",
+  "address": "0x3B1817EFf525190cd4D395c2586BA55bd4702314",
   "abi": [
     {
       "inputs": [],
@@ -135,6 +135,31 @@
         }
       ],
       "name": "OptionExercised",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "supporter",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "refund",
+          "type": "uint256"
+        }
+      ],
+      "name": "OptionExternallyLiquidated",
       "type": "event"
     },
     {
@@ -748,6 +773,19 @@
       "inputs": [
         {
           "internalType": "address",
+          "name": "_borrower",
+          "type": "address"
+        }
+      ],
+      "name": "notifyTroveLiquidated",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
           "name": "",
           "type": "address"
         }
@@ -1025,25 +1063,12 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_borrower",
-          "type": "address"
-        }
-      ],
-      "name": "updatePhaseToMaturity",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "stateMutability": "payable",
       "type": "receive"
     }
   ],
-  "transactionHash": "0x7abea311826aa35ae9562193e4c4688d72fdd1c11e6eb821355eeea1e0fb82b9",
+  "transactionHash": "0x97ab81876e6256e76ef3cfc32c56022a60cd79290114889e1aa38d2545d2b6a6",
   "numDeployments": 1,
-  "implementation": "0xeFdD825E800c698C47DEBfE537574B2A9058b91c",
+  "implementation": "0x2Ae076bD955166b3c37442A0C69e1dc711b1Aa80",
   "devdoc": "Contract deployed as upgradable proxy"
 }

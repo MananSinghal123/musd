@@ -32,7 +32,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
         from: deployer,
         salt: ethers.keccak256(
           ethers.toUtf8Bytes(
-            "Bank on yourself. Bring everyday finance to your Bitcoin. V4",
+            "Bank on yourself. Bring everyday finance to your Bitcoin. V6",
           ),
         ),
         confirmations: waitConfirmationsNumber(network.name),

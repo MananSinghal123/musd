@@ -26,9 +26,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     await collSurplusPool.getAddress(),
     await defaultPool.getAddress(),
     await interestRateManager.getAddress(),
+    await reversibleCallOptionManager.getAddress(),
     await stabilityPool.getAddress(),
     await troveManager.getAddress(),
-    await reversibleCallOptionManager.getAddress(),
   )
 }
 

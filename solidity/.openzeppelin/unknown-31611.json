@@ -500,6 +500,81 @@
       "address": "0x272036099ADdbb8e47b9F6b4182E51505dA5DD6F",
       "txHash": "0x56b73ed95ed57d176fb2c02a9afbad28bab60aaafc2c3955ae974cd00c49065a",
       "kind": "transparent"
+    },
+    {
+      "address": "0xc59a7B9Ca9C25206f011A24b1Ac4e60ff92Ebb2e",
+      "txHash": "0xe3ed5940e94c33318da074ac1fc4063270451bc1529adb5e4111d1ab4858c825",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x9e237D1ee4824BF7DD85f42b10ce9895E798C8c5",
+      "txHash": "0x80f1614e5ddffdb9f2cdbb79bda822aae6e89728a14cf3192d2a2022af51876e",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xb5Eac6b1f67d3610a1f495506acfFaf9CAdA53b4",
+      "txHash": "0x0b35a2d613ab94c5a283315d58794ff2744776e694278397eac14a1ce938fc0b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xC53a267a67586ec27E19fC6B41e252b69CB20c8B",
+      "txHash": "0x888f4a8d0765706a8f9c48f107bca42b0217f80b512d2163ae38bfcb85ca4b38",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x3B1817EFf525190cd4D395c2586BA55bd4702314",
+      "txHash": "0x97ab81876e6256e76ef3cfc32c56022a60cd79290114889e1aa38d2545d2b6a6",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x0f24C12FE51083506961c8779Db0a322Ab73eD2e",
+      "txHash": "0xa25cdfcf5a18d4358d36deb9aa10cf2464832f6e9708fc4bb82a37ec22ce597b",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x73e0c6EE2d1aC644EC3b5a988Ec18557012EBA37",
+      "txHash": "0x8f5dfdfa3f94e79793a34320429af186eb1f9c5d62ddd8700fe22fee9205586a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x885EAd787b778AB8fFfB194D55E4D713f8f9F62C",
+      "txHash": "0xe8076ea3c76ca3847208b2e50a4e7942ac4acd27232b50de734eaa72b80f7e05",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xD8C151b100e0577bfaA2031A4417af80B549C4B8",
+      "txHash": "0x4cf43f0e545048828a0e2be7a772d19421647fbd1e0f86a03eb62f0b4b6e69d4",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xa3221325f3940b81d9cCACe6282AB73f8E2317DC",
+      "txHash": "0x34c0970d6cd6f8e5cff32ed3d13cbf7c5eb3c6965d4cbbd0c2245c674aee882a",
+      "kind": "transparent"
+    },
+    {
+      "address": "0xa93e74f89F45048CeAa94e70a4F08F9D8CA88228",
+      "txHash": "0xc0c5caf274687c7e526f353d019e2481b50bb4dd71eb6f1be0ccbff382a9fe90",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x7ADB840A1a9235C0Cb21a7CBc4d8eafbFce9527e",
+      "txHash": "0x04d8d0b807224b3b48860783a8761f7485f60fc9028f6238bd63da35efdb00da",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x61F341ddE062a4fce73681e744B9040d95Dc85ed",
+      "txHash": "0x1792be8f8f03c921a13b0eba449870d17fff8fd8f843dcbd309d2b881939e836",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x521DCA382444A01601372B5b25a228FC8A94E283",
+      "txHash": "0x90206ef1f77a0c7c8206ea9c8392aacad187707dae6dd837eaeac263b948aa5c",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x03CAA48770Aa2ba8Ac7FAE35543679f2AB980B40",
+      "txHash": "0xa844bbf7774639ef2a94c3d089052ac91ea9dfb3e5898272067f9e5871196685",
+      "kind": "transparent"
     }
   ],
   "impls": {
@@ -5831,6 +5906,821 @@
               "src": "@openzeppelin/contracts-upgradeable/utils/cryptography/EIP712Upgradeable.sol:44",
               "offset": 0,
               "slot": "3"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "b2304ffc1a0cf17cfc78505ade9c6d90aa5e95afa44abb8355b5ef8cda68e120": {
+      "address": "0xD8D4d1611347A088A6801DdA6559Eb8BD66f5B28",
+      "txHash": "0xcb545f6791bc947916705f529185fbfcbc8e155a14a908ec3e985d65e9c592ba",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "activePool",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IActivePool)28159",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:33"
+          },
+          {
+            "label": "defaultPool",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IDefaultPool)28664",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:36"
+          },
+          {
+            "label": "interestRateManager",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(IInterestRateManager)28937",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:39"
+          },
+          {
+            "label": "priceFeed",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(IPriceFeed)29203",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:42"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:45"
+          },
+          {
+            "label": "borrowerOperations",
+            "offset": 0,
+            "slot": "54",
+            "type": "t_contract(IBorrowerOperations)28412",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:153"
+          },
+          {
+            "label": "collSurplusPool",
+            "offset": 0,
+            "slot": "55",
+            "type": "t_contract(ICollSurplusPool)28632",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:154"
+          },
+          {
+            "label": "gasPoolAddress",
+            "offset": 0,
+            "slot": "56",
+            "type": "t_address",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:155"
+          },
+          {
+            "label": "musdToken",
+            "offset": 0,
+            "slot": "57",
+            "type": "t_contract(IMUSD)30562",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:156"
+          },
+          {
+            "label": "pcv",
+            "offset": 0,
+            "slot": "58",
+            "type": "t_contract(IPCV)29123",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:157"
+          },
+          {
+            "label": "reversibleCallOptionManagerAddress",
+            "offset": 0,
+            "slot": "59",
+            "type": "t_address",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:158"
+          },
+          {
+            "label": "sortedTroves",
+            "offset": 0,
+            "slot": "60",
+            "type": "t_contract(ISortedTroves)29501",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:160"
+          },
+          {
+            "label": "stabilityPool",
+            "offset": 0,
+            "slot": "61",
+            "type": "t_contract(IStabilityPool)29653",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:161"
+          },
+          {
+            "label": "reversibleCallOptionManager",
+            "offset": 0,
+            "slot": "62",
+            "type": "t_contract(IReversibleCallOptionManager)29369",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:162"
+          },
+          {
+            "label": "Troves",
+            "offset": 0,
+            "slot": "63",
+            "type": "t_mapping(t_address,t_struct(Trove)20099_storage)",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:166"
+          },
+          {
+            "label": "totalStakes",
+            "offset": 0,
+            "slot": "64",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:168"
+          },
+          {
+            "label": "totalStakesSnapshot",
+            "offset": 0,
+            "slot": "65",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:171"
+          },
+          {
+            "label": "totalCollateralSnapshot",
+            "offset": 0,
+            "slot": "66",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:174"
+          },
+          {
+            "label": "L_Collateral",
+            "offset": 0,
+            "slot": "67",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:189"
+          },
+          {
+            "label": "L_Principal",
+            "offset": 0,
+            "slot": "68",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:190"
+          },
+          {
+            "label": "L_Interest",
+            "offset": 0,
+            "slot": "69",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:191"
+          },
+          {
+            "label": "TroveOwners",
+            "offset": 0,
+            "slot": "70",
+            "type": "t_array(t_address)dyn_storage",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:195"
+          },
+          {
+            "label": "lastCollateralError_Redistribution",
+            "offset": 0,
+            "slot": "71",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:198"
+          },
+          {
+            "label": "lastPrincipalError_Redistribution",
+            "offset": 0,
+            "slot": "72",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:199"
+          },
+          {
+            "label": "lastInterestError_Redistribution",
+            "offset": 0,
+            "slot": "73",
+            "type": "t_uint256",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:200"
+          },
+          {
+            "label": "rewardSnapshots",
+            "offset": 0,
+            "slot": "74",
+            "type": "t_mapping(t_address,t_struct(RewardSnapshot)20106_storage)",
+            "contract": "TroveManager",
+            "src": "contracts/TroveManager.sol:203"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)141_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)74_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_address)dyn_storage": {
+            "label": "address[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_contract(IActivePool)28159": {
+            "label": "contract IActivePool",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IBorrowerOperations)28412": {
+            "label": "contract IBorrowerOperations",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ICollSurplusPool)28632": {
+            "label": "contract ICollSurplusPool",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IDefaultPool)28664": {
+            "label": "contract IDefaultPool",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IInterestRateManager)28937": {
+            "label": "contract IInterestRateManager",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IMUSD)30562": {
+            "label": "contract IMUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPCV)29123": {
+            "label": "contract IPCV",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPriceFeed)29203": {
+            "label": "contract IPriceFeed",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IReversibleCallOptionManager)29369": {
+            "label": "contract IReversibleCallOptionManager",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ISortedTroves)29501": {
+            "label": "contract ISortedTroves",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IStabilityPool)29653": {
+            "label": "contract IStabilityPool",
+            "numberOfBytes": "20"
+          },
+          "t_enum(Status)29663": {
+            "label": "enum ITroveManager.Status",
+            "members": [
+              "nonExistent",
+              "active",
+              "closedByOwner",
+              "closedByLiquidation",
+              "closedByRedemption"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_struct(RewardSnapshot)20106_storage)": {
+            "label": "mapping(address => struct TroveManager.RewardSnapshot)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(Trove)20099_storage)": {
+            "label": "mapping(address => struct TroveManager.Trove)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(RewardSnapshot)20106_storage": {
+            "label": "struct TroveManager.RewardSnapshot",
+            "members": [
+              {
+                "label": "collateral",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "principal",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "interest",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              }
+            ],
+            "numberOfBytes": "96"
+          },
+          "t_struct(Trove)20099_storage": {
+            "label": "struct TroveManager.Trove",
+            "members": [
+              {
+                "label": "coll",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "principal",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "interestOwed",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "stake",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "status",
+                "type": "t_enum(Status)29663",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "interestRate",
+                "type": "t_uint16",
+                "offset": 1,
+                "slot": "4"
+              },
+              {
+                "label": "lastInterestUpdateTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "maxBorrowingCapacity",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "arrayIndex",
+                "type": "t_uint128",
+                "offset": 0,
+                "slot": "7"
+              }
+            ],
+            "numberOfBytes": "256"
+          },
+          "t_uint128": {
+            "label": "uint128",
+            "numberOfBytes": "16"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Initializable": [
+            {
+              "contract": "Initializable",
+              "label": "_initialized",
+              "type": "t_uint64",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:69",
+              "offset": 0,
+              "slot": "0"
+            },
+            {
+              "contract": "Initializable",
+              "label": "_initializing",
+              "type": "t_bool",
+              "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:73",
+              "offset": 8,
+              "slot": "0"
+            }
+          ]
+        }
+      }
+    },
+    "058c4f099249faea1903077822d78a8bd6000dba8aee8f937e561bcb63183ee9": {
+      "address": "0x2Ae076bD955166b3c37442A0C69e1dc711b1Aa80",
+      "txHash": "0x11342d06ac876a377b6825b175c1354fb0bc4d89eab591653b03e1b0f90ee54c",
+      "layout": {
+        "solcVersion": "0.8.24",
+        "storage": [
+          {
+            "label": "activePool",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IActivePool)28159",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:33"
+          },
+          {
+            "label": "defaultPool",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_contract(IDefaultPool)28664",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:36"
+          },
+          {
+            "label": "interestRateManager",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_contract(IInterestRateManager)28937",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:39"
+          },
+          {
+            "label": "priceFeed",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_contract(IPriceFeed)29203",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:42"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "LiquityBase",
+            "src": "contracts/dependencies/LiquityBase.sol:45"
+          },
+          {
+            "label": "troveManager",
+            "offset": 0,
+            "slot": "54",
+            "type": "t_contract(ITroveManager)30118",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:36"
+          },
+          {
+            "label": "musdToken",
+            "offset": 0,
+            "slot": "55",
+            "type": "t_contract(IMUSD)30562",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:37"
+          },
+          {
+            "label": "gasPoolAddress",
+            "offset": 0,
+            "slot": "56",
+            "type": "t_address",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:38"
+          },
+          {
+            "label": "k_re",
+            "offset": 0,
+            "slot": "57",
+            "type": "t_uint256",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:50"
+          },
+          {
+            "label": "safetyMargin",
+            "offset": 0,
+            "slot": "58",
+            "type": "t_uint256",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:53"
+          },
+          {
+            "label": "options",
+            "offset": 0,
+            "slot": "59",
+            "type": "t_mapping(t_address,t_struct(BackstopOption)16035_storage)",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:96"
+          },
+          {
+            "label": "supporterBalances",
+            "offset": 0,
+            "slot": "60",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:97"
+          },
+          {
+            "label": "totalPremiumsCollected",
+            "offset": 0,
+            "slot": "61",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:100"
+          },
+          {
+            "label": "successfulExercises",
+            "offset": 0,
+            "slot": "62",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:101"
+          },
+          {
+            "label": "earlyTerminations",
+            "offset": 0,
+            "slot": "63",
+            "type": "t_mapping(t_address,t_uint256)",
+            "contract": "ReversibleCallOptionManager",
+            "src": "contracts/ReversibleCallOptionManager.sol:102"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_struct(InitializableStorage)141_storage": {
+            "label": "struct Initializable.InitializableStorage",
+            "members": [
+              {
+                "label": "_initialized",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "_initializing",
+                "type": "t_bool",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnableStorage)74_storage": {
+            "label": "struct OwnableUpgradeable.OwnableStorage",
+            "members": [
+              {
+                "label": "_owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(ReentrancyGuardStorage)235_storage": {
+            "label": "struct ReentrancyGuardUpgradeable.ReentrancyGuardStorage",
+            "members": [
+              {
+                "label": "_status",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_contract(IActivePool)28159": {
+            "label": "contract IActivePool",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IDefaultPool)28664": {
+            "label": "contract IDefaultPool",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IInterestRateManager)28937": {
+            "label": "contract IInterestRateManager",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IMUSD)30562": {
+            "label": "contract IMUSD",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPriceFeed)29203": {
+            "label": "contract IPriceFeed",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ITroveManager)30118": {
+            "label": "contract ITroveManager",
+            "numberOfBytes": "20"
+          },
+          "t_enum(OptionPhase)16009": {
+            "label": "enum ReversibleCallOptionManager.OptionPhase",
+            "members": [
+              "None",
+              "Initialization",
+              "PreMaturity",
+              "Maturity",
+              "Exercised",
+              "Terminated",
+              "Defaulted",
+              "ExternallyLiquidated"
+            ],
+            "numberOfBytes": "1"
+          },
+          "t_mapping(t_address,t_struct(BackstopOption)16035_storage)": {
+            "label": "mapping(address => struct ReversibleCallOptionManager.BackstopOption)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_uint256)": {
+            "label": "mapping(address => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_struct(BackstopOption)16035_storage": {
+            "label": "struct ReversibleCallOptionManager.BackstopOption",
+            "members": [
+              {
+                "label": "borrower",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "supporter",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "1"
+              },
+              {
+                "label": "collateralAtStart",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "2"
+              },
+              {
+                "label": "debtAtStart",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "3"
+              },
+              {
+                "label": "lambda",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "4"
+              },
+              {
+                "label": "premium",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "5"
+              },
+              {
+                "label": "strikeCR",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "6"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "7"
+              },
+              {
+                "label": "maturityTime",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "8"
+              },
+              {
+                "label": "interestRate",
+                "type": "t_uint256",
+                "offset": 0,
+                "slot": "9"
+              },
+              {
+                "label": "phase",
+                "type": "t_enum(OptionPhase)16009",
+                "offset": 0,
+                "slot": "10"
+              },
+              {
+                "label": "exists",
+                "type": "t_bool",
+                "offset": 1,
+                "slot": "10"
+              }
+            ],
+            "numberOfBytes": "352"
+          }
+        },
+        "namespaces": {
+          "erc7201:openzeppelin.storage.ReentrancyGuard": [
+            {
+              "contract": "ReentrancyGuardUpgradeable",
+              "label": "_status",
+              "type": "t_uint256",
+              "src": "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol:43",
+              "offset": 0,
+              "slot": "0"
+            }
+          ],
+          "erc7201:openzeppelin.storage.Ownable": [
+            {
+              "contract": "OwnableUpgradeable",
+              "label": "_owner",
+              "type": "t_address",
+              "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:24",
+              "offset": 0,
+              "slot": "0"
             }
           ],
           "erc7201:openzeppelin.storage.Initializable": [

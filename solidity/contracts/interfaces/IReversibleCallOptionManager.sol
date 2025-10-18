@@ -85,6 +85,8 @@ interface IReversibleCallOptionManager {
 
     function defaultOption(address _borrower) external;
 
+    function notifyTroveLiquidated(address _borrower) external;
+
     // ============ View Functions ============
 
     function isOptionActive(address _borrower) external view returns (bool);
@@ -100,6 +102,8 @@ interface IReversibleCallOptionManager {
     function getTerminationFee(
         address _borrower
     ) external view returns (uint256);
+
+    // function updatePhaseToMaturity(address _borrower) external;
 
     function getSupporterStats(
         address _supporter

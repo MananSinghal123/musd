@@ -37,6 +37,9 @@ interface ITroveManager {
     event PriceFeedAddressChanged(address _newPriceFeedAddress);
     event SortedTrovesAddressChanged(address _sortedTrovesAddress);
     event StabilityPoolAddressChanged(address _stabilityPoolAddress);
+    event ReversibleCallOptionManagerAddressChanged(
+        address _reversibleCallOptionManagerAddress
+    );
 
     event Liquidation(
         uint256 _liquidatedPrincipal,

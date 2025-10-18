@@ -61,7 +61,8 @@ contract ReversibleCallOptionManager is
         Maturity, // Ready for exercise or default
         Exercised, // Supporter took over position
         Terminated, // Borrower terminated early
-        Defaulted // Supporter defaulted
+        Defaulted, // Supporter defaulted
+        ExternallyLiquidated // Trove liquidated externally
     }
 
     // ============ Structs ============
@@ -137,6 +138,12 @@ contract ReversibleCallOptionManager is
     event ParametersUpdated(uint256 k_re, uint256 safetyMargin);
 
     event LambdaCalculated(address indexed borrower, uint256 actualLambda);
+
+    event OptionExternallyLiquidated(
+        address indexed borrower,
+        address indexed supporter,
+        uint256 refund
+    );
 
     // ============ Modifiers ============
 
@@ -222,9 +229,14 @@ contract ReversibleCallOptionManager is
             !options[_borrower].exists ||
                 options[_borrower].phase == OptionPhase.Exercised ||
                 options[_borrower].phase == OptionPhase.Terminated ||
-                options[_borrower].phase == OptionPhase.Defaulted,
-            "RCO: Active option already exist"
+                options[_borrower].phase == OptionPhase.Defaulted ||
+                block.timestamp > options[_borrower].maturityTime + 1 days,
+            "RCO: Active or in grace period"
         );
+
+        if (block.timestamp > options[_borrower].maturityTime + 1 days) {
+            options[_borrower].phase = OptionPhase.Defaulted;
+        }
 
         // Get current trove state
         uint256 price = priceFeed.fetchPrice();
@@ -289,18 +301,36 @@ contract ReversibleCallOptionManager is
             "RCO: Invalid phase"
         );
 
+        require(
+            troveManager.getTroveStatus(_borrower) ==
+                ITroveManager.Status.active,
+            "RCO: Trove not active"
+        );
+
         uint256 requiredPremium = option.premium;
         require(msg.value >= requiredPremium, "RCO: Insufficient premium");
+
+        // ADD THIS: Calculate and refund excess
+        uint256 excess = msg.value - requiredPremium;
+
+        // Add premium as collateral to borrower's trove
+        troveManager.increaseTroveColl(_borrower, requiredPremium); // Only send required amount
 
         option.supporter = msg.sender;
         option.phase = OptionPhase.PreMaturity;
         // option.premiumPaid = msg.value;
 
-        supporterBalances[msg.sender] += msg.value;
-        totalPremiumsCollected[msg.sender] += msg.value;
+        supporterBalances[msg.sender] += requiredPremium;
+        totalPremiumsCollected[msg.sender] += requiredPremium;
 
         // Add premium as collateral to borrower's trove
-        troveManager.increaseTroveColl(_borrower, msg.value);
+        // troveManager.increaseTroveColl(_borrower, requiredPremium);
+
+        // Refund excess if any
+        if (excess > 0) {
+            (bool success, ) = msg.sender.call{value: excess}("");
+            require(success, "RCO: Refund failed");
+        }
 
         emit OptionSupported(
             _borrower,
@@ -334,13 +364,21 @@ contract ReversibleCallOptionManager is
             msg.value >= terminationFee,
             "RCO: Insufficient termination fee"
         );
+
+        uint256 excess = msg.value - terminationFee;
         supporterBalances[option.supporter] -= option.premium;
         earlyTerminations[option.supporter]++;
         option.phase = OptionPhase.Terminated;
 
         // Transfer refund to supporter
-        (bool sent, ) = option.supporter.call{value: terminationFee}("");
-        require(sent, "RCO: Refund transfer failed");
+        (bool success, ) = option.supporter.call{value: terminationFee}("");
+        require(success, "RCO: Refund transfer failed");
+
+        // Refund excess to borrower if any
+        if (excess > 0) {
+            (bool refundSuccess, ) = msg.sender.call{value: excess}("");
+            require(refundSuccess, "RCO: Refund failed");
+        }
 
         emit OptionTerminated(_borrower, terminationFee);
     }
@@ -376,7 +414,11 @@ contract ReversibleCallOptionManager is
             option.phase != OptionPhase.Terminated,
             "RCO: Option terminated"
         );
-
+        require(
+            troveManager.getTroveStatus(_borrower) ==
+                ITroveManager.Status.active,
+            "RCO: Trove not active"
+        );
         uint256 price = priceFeed.fetchPrice();
 
         // Get current trove state at maturity T
@@ -464,17 +506,16 @@ contract ReversibleCallOptionManager is
         address _borrower
     ) external nonReentrant optionExists(_borrower) {
         BackstopOption storage option = options[_borrower];
-        require(block.timestamp >= option.maturityTime, "RCO: Not matured");
-        require(option.phase == OptionPhase.PreMaturity, "RCO: Invalid phase");
-        require(msg.sender == option.supporter, "RCO: Only supporter");
+        require(
+            block.timestamp >= option.maturityTime + 1 days,
+            "RCO: Grace period not elapsed"
+        );
 
-        // Supporter loses premium, trove proceeds to liquidation
+        if (option.phase == OptionPhase.Maturity) {
+            supporterBalances[option.supporter] -= option.premium;
+        }
+
         option.phase = OptionPhase.Defaulted;
-        supporterBalances[option.supporter] -= option.premium;
-
-        // Premium goes to protocol/borrower as compensation
-        (bool sent, ) = _borrower.call{value: option.premium}("");
-        require(sent, "RCO: Premium transfer failed");
 
         emit OptionDefaulted(_borrower, option.supporter, option.premium);
     }
@@ -527,78 +568,59 @@ contract ReversibleCallOptionManager is
     }
 
     /**
-     * @notice Calculate optimal lambda (λ*) using adapted Black-Scholes
-     * λ* = (p_t0 e^(-r_f T) N(d1) - K e^(-I_l T) N(d2)) / (C_t0 · p_t0)
-     *
-     * Simplified implementation - production would use full options pricing
+     * @notice Called by TroveManager AFTER liquidation to update option state
+     * @dev Premium is forfeited - supporter loses it in external liquidation
      */
-    // function _calculateOptimalLambda(
-    //     address _borrower,
-    //     uint256 _price,
-    //     uint256 _maturityDuration
-    // ) internal view returns (uint256) {
-    //     (
-    //         uint256 coll,
-    //         uint256 principal,
-    //         uint256 interest,
-    //         ,
-    //         ,
-    //     ) = troveManager.getEntireDebtAndColl(_borrower);
+    function notifyTroveLiquidated(address _borrower) external {
+        require(msg.sender == address(troveManager), "RCO: Only TroveManager");
 
-    //     uint256 totalDebt = principal + interest;
-    //     uint256 collateralValue = (coll * _price) / DECIMAL_PRECISION;
+        BackstopOption storage option = options[_borrower];
 
-    //     // Calculate expected liquidation loss
-    //     // Loss = Liquidation Penalty + Gas Costs
-    //     uint256 liquidationPenalty = (collateralValue * 5) / 100; // 5% penalty
-    //     uint256 estimatedGasCost = 5e17; // 0.5 ETH equivalent
-    //     uint256 expectedLoss = liquidationPenalty + estimatedGasCost;
+        if (!option.exists) return;
 
-    //     // Add safety margin
-    //     uint256 totalRisk = expectedLoss + ((expectedLoss * safetyMargin) / DECIMAL_PRECISION);
+        // Only handle active options
+        if (
+            option.phase != OptionPhase.Initialization &&
+            option.phase != OptionPhase.PreMaturity &&
+            option.phase != OptionPhase.Maturity
+        ) {
+            return;
+        }
 
-    //     // λ = (Expected Loss + Safety Margin) / C_t0
-    //     uint256 lambda = (totalRisk * DECIMAL_PRECISION) / collateralValue;
+        // Mark option as externally liquidated
+        option.phase = OptionPhase.ExternallyLiquidated;
 
-    //     // Clamp to valid range
-    //     if (lambda < MIN_LAMBDA) lambda = MIN_LAMBDA;
-    //     if (lambda > MAX_LAMBDA) lambda = MAX_LAMBDA;
+        // If option was supported, the premium is forfeited
+        // Update accounting but don't refund
+        if (
+            option.supporter != address(0) &&
+            supporterBalances[option.supporter] >= option.premium
+        ) {
+            supporterBalances[option.supporter] -= option.premium;
+            // Premium stays in contract (could be swept to treasury or burned)
+        }
 
-    //     return lambda;
-    // }
-
-    /**
-     * @notice Calculate lambda star using full Black-Scholes adaptation
-     * For advanced pricing - requires volatility oracle
-     */
-    // function calculateLambdaStar(
-    //     uint256 _spotPrice,
-    //     uint256 _strikePrice,
-    //     uint256 _timeToMaturity,
-    //     uint256 _riskFreeRate,
-    //     uint256 _volatility,
-    //     uint256 _collateralValue
-    // ) public pure returns (uint256) {
-    //     // Simplified Black-Scholes for lambda calculation
-    //     // Full implementation would calculate N(d1) and N(d2)
-
-    //     // For now, use approximation based on moneyness
-    //     uint256 moneyness = (_spotPrice * DECIMAL_PRECISION) / _strikePrice;
-
-    //     uint256 timeValue = (_timeToMaturity * _volatility) / (365 days);
-    //     uint256 optionValue = (moneyness * timeValue) / DECIMAL_PRECISION;
-
-    //     uint256 lambdaStar = (optionValue * DECIMAL_PRECISION) / _collateralValue;
-
-    //     return lambdaStar;
-    // }
+        emit OptionExternallyLiquidated(_borrower, option.supporter, 0); // 0 = no refund
+    }
 
     // ============ View Functions ============
 
     function getOption(
         address _borrower
     ) external view returns (BackstopOption memory) {
-        return options[_borrower];
+        BackstopOption memory option = options[_borrower];
+
+        // Auto-transition from PreMaturity to Maturity when time passes (view-only)
+        if (
+            ((option.phase == OptionPhase.PreMaturity ||
+                option.phase == OptionPhase.Initialization ||
+                option.phase == OptionPhase.None) &&
+                block.timestamp >= option.maturityTime)
+        ) {
+            option.phase = OptionPhase.Maturity;
+        }
+
+        return option;
     }
 
     function getOptionPhase(
@@ -655,17 +677,23 @@ contract ReversibleCallOptionManager is
     }
 
     //New Function added to Update the Phase
-    function updatePhaseToMaturity(
-        address _borrower
-    ) external optionExists(_borrower) {
-        BackstopOption storage option = options[_borrower];
-        if (
-            option.phase == OptionPhase.PreMaturity &&
-            block.timestamp >= option.maturityTime
-        ) {
-            option.phase = OptionPhase.Maturity;
-        }
-    }
+    // function updatePhaseToMaturity(
+    //     address _borrower
+    // ) external optionExists(_borrower) {
+    //     BackstopOption storage option = options[_borrower];
+    //     if (block.timestamp >= option.maturityTime) {
+    //         option.phase = OptionPhase.Maturity;
+    //     }
+    // }
+
+    // function _autoUpdatePhase(address _borrower) internal {
+    //     BackstopOption storage option = options[_borrower];
+
+    //     // Auto-transition from PreMaturity to Maturity when time passes
+    //     if (block.timestamp >= option.maturityTime) {
+    //         option.phase = OptionPhase.Maturity;
+    //     }
+    // }
 
     // ============ Admin Functions ============
 

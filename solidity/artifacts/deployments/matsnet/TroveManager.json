@@ -1,5 +1,5 @@
 {
-  "address": "0xb7a7720d8F0d164abC1AF432CD64c985dd62374a",
+  "address": "0xb5Eac6b1f67d3610a1f495506acfFaf9CAdA53b4",
   "abi": [
     {
       "inputs": [],
@@ -291,6 +291,19 @@
         }
       ],
       "name": "Redemption",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_reversibleCallOptionManagerAddress",
+          "type": "address"
+        }
+      ],
+      "name": "ReversibleCallOptionManagerAddressChanged",
       "type": "event"
     },
     {
@@ -1487,6 +1500,19 @@
     },
     {
       "inputs": [],
+      "name": "reversibleCallOptionManager",
+      "outputs": [
+        {
+          "internalType": "contract IReversibleCallOptionManager",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "reversibleCallOptionManagerAddress",
       "outputs": [
         {
@@ -1798,8 +1824,8 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xaa038a4dfcb97b7f0375de15d8f7f73442f18fd0a5b3a1360044c8e5fcdc7165",
+  "transactionHash": "0x0b35a2d613ab94c5a283315d58794ff2744776e694278397eac14a1ce938fc0b",
   "numDeployments": 1,
-  "implementation": "0x31390d115B30c0C5B4B5c8B6e045CCF088F29aeC",
+  "implementation": "0xD8D4d1611347A088A6801DdA6559Eb8BD66f5B28",
   "devdoc": "Contract deployed as upgradable proxy"
 }

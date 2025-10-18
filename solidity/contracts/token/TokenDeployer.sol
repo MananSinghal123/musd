@@ -11,7 +11,7 @@ import "./MUSD.sol";
 contract TokenDeployer {
     bytes32 public constant SALT =
         keccak256(
-            "Bank on yourself. Bring everyday finance to your Bitcoin. V4"
+            "Bank on yourself. Bring everyday finance to your Bitcoin. V6"
         );
 
     /// @notice The deployer address allowed to call the `deploy()` function.
